@@ -52,3 +52,11 @@ class UserProfileForm(UserChangeForm):
             field.widget.attrs["class"] = "form-control py-4"
 
         self.fields["image"].widget.attrs["class"] = "custom-file-input"
+
+    def clean_username(self):
+        data = self.cleaned_data["username"]
+        forbidden_characters = ["!", "@", "#", "$", "%", "^", "&", "*", "(", ")", "-", "_", "+", "+", "§", "±"]
+        for word in data:
+            if word in forbidden_characters:
+                raise ValidationError(f"Имя не должно содержать таких символов {', '.join(forbidden_characters)}")
+        return data
