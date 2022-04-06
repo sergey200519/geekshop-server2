@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from authapp.forms import UserLoginForm, UserRegisterForm
-from django.contrib import auth
+from django.contrib import auth, messages
+# from django.contrib import auth, messages
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+# from django.contrib.messages import middleware
 
 # Create your views here.
 
@@ -16,10 +18,6 @@ def login(request):
             if user.is_active:
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse('index'))
-            else:
-                print("bla bla")
-        else:
-            print(form.errors)
     else:
         form = UserLoginForm()
 
@@ -38,6 +36,7 @@ def register(request):
         form = UserRegisterForm(data=request.POST)
         if form.is_valid():
             form.save()
+            messages.success(request, "Вы успешно зарегистрировалилсь")
             return HttpResponseRedirect(reverse('authapp:login'))
         else:
             print(form.errors)
