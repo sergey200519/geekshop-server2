@@ -32,7 +32,7 @@ def basket_edit(request, basket_id, quantity):
             basket.quantity = quantity
             basket.save()
         else:
-            basket.delete()
+            basket.delete() 
 
         baskets = Basket.objects.filter(user = request.user)
         context = {"baskets": baskets}
