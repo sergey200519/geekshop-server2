@@ -26,7 +26,7 @@ def basket_remove(request, basket_id):
     return HttpResponseRedirect(request.META.get("HTTP_REFERER"))
 
 def basket_edit(request, basket_id, quantity):
-    if request.is_ajax():
+    if request.headers.get('x-requested-with') == 'XMLHttpRequest':
         basket = Basket.objects.get(id=basket_id)
         if quantity > 0:
             basket.quantity = quantity
