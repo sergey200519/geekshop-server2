@@ -1,14 +1,14 @@
 from django.urls import path
-from adminapp.views import index, admin_users, admin_user_create, admin_user_update, admin_user_delete, admin_categories, admin_categories_create, admin_products, admin_category_update, admin_category_delete, admin_product_create, admin_product_update, admin_product_delete
+from adminapp.views import IndexTemlateView, UserListView, UserCreateView, UserUpdateView, UserDeleteViewView, admin_categories, admin_categories_create, admin_products, admin_category_update, admin_category_delete, admin_product_create, admin_product_update, admin_product_delete
 
 
 app_name = "adminapp"
 urlpatterns = [
-    path("", index, name="index"),
-    path("users/", admin_users, name="admin_users"),
-    path("user_create/", admin_user_create, name="admin_user_create"),
-    path("user_update/<int:id>/", admin_user_update, name="admin_user_update"),
-    path("user_delete/<int:id>/", admin_user_delete, name="admin_user_delete"),
+    path("", IndexTemlateView.as_view(), name="index"),
+    path("users/", UserListView.as_view(), name="admin_users"),
+    path("user_create/", UserCreateView.as_view(), name="admin_user_create"),
+    path("user_update/<int:pk>/", UserUpdateView.as_view(), name="admin_user_update"),
+    path("user_delete/<int:pk>/", UserDeleteViewView.as_view(), name="admin_user_delete"),
 
     path("categories/", admin_categories, name="admin_categories"),
     path("categories_create/", admin_categories_create, name="admin_categories_create"),
