@@ -3,6 +3,7 @@ from adminapp.views import IndexTemlateView, UserListView, UserCreateView, UserU
 
 
 app_name = "adminapp"
+
 urlpatterns = [
     path("", IndexTemlateView.as_view(), name="index"),
     path("users/", UserListView.as_view(), name="admin_users"),
