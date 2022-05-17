@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm
+from authapp.forms import UserLoginForm, UserRegisterForm, UserProfileForm, UserProfileEditForm
 from django.contrib import auth, messages
 # from django.contrib import auth, messages
 from django.http import HttpResponseRedirect
@@ -12,6 +12,7 @@ from authapp.mixin import BaseClassContextMixin, UserDispatchMixin
 from authapp.models import User
 from django.conf import settings
 from django.core.mail import send_mail
+from django.views.generic import UpdateView
 
 
 # Create your views here.
@@ -99,19 +100,47 @@ class RegisterView(FormView, BaseClassContextMixin):
 
 
 
-@login_required
-def profile(request):
-    if request.method == "POST":
-        form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
-        if form.is_valid():
+# @login_required
+# def profile(request):
+#     if request.method == "POST":
+#         form = UserProfileForm(instance=request.user, data=request.POST, files=request.FILES)
+#         if form.is_valid():
+#             form.save()
+#     user_select = request.user
+#     context = {
+#         "title": "Geekshop |  Профайл",
+#         "form": UserProfileForm(instance=request.user),
+#         "baskets": Basket.objects.filter(user=user_select)
+#     }
+#     return render(request, "authapp/profile.html", context)
+#
+class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
+    template_name = "authapp/profile.html"
+    form_class = UserProfileForm
+    success_url = reverse_lazy("authapp:profile")
+    title = "Geekshop |  Профайл"
+
+    def post(self, request, *args, **kwargs):
+        form = UserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
+        profile_form = UserProfileEditForm(data=request.POST, files=request.FILES, instance=request.user.userprofile)
+        if form.is_valid() and profile_form.is_valid():
             form.save()
-    user_select = request.user
-    context = {
-        "title": "Geekshop |  Профайл",
-        "form": UserProfileForm(instance=request.user),
-        "baskets": Basket.objects.filter(user=user_select)
-    }
-    return render(request, "authapp/profile.html", context)
+        return redirect(self.success_url)
+
+
+    def get_context_date(self, **kwargs):
+        context = super(ProfileFormView, self).get_context_data()
+        context["profile"] = UserProfileEditForm(instance=self.request.user.userprofile)
+        return context
+
+    def form_valid(self, form):
+        messages.set_level(self.request.messages.SUCCESS)
+        messages.success(self.request, "Вы успешно соранили профиль")
+        super().form_valid(form)
+        return HttpResponseRedirect(self.get_success_url())
+
+    def get_object(self, queryset=None):
+        return User.objects.get(id=self.request.user.pk)
 
 
 

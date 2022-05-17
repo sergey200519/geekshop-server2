@@ -31,7 +31,7 @@ DEBUG = True
 ALLOWED_HOSTS = []
 
 
-# Application definition 
+# Application definition
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -167,7 +167,7 @@ EMAIL_USE_SSL = False
 
 EMAIL_HOST_USER, EMAIL_HOST_PASSWORD = None, None
 
-AUTHENTICATION_BACKEND = (
+AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.ModelBackend",
     "social_core.backends.vk.VKOAuth2"
 )
