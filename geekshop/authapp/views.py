@@ -134,7 +134,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
         return context
 
     def form_valid(self, form):
-        messages.set_level(self.request.messages.SUCCESS)
+        messages.set_level(self.request.messages.SUCCESS) 
         messages.success(self.request, "Вы успешно соранили профиль")
         super().form_valid(form)
         return HttpResponseRedirect(self.get_success_url())
