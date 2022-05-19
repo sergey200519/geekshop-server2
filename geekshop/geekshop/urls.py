@@ -25,7 +25,8 @@ urlpatterns = [
   path("products/", include("mainapp.urls", namespace="mainapp")),
   path("authapp/", include("authapp.urls", namespace="authapp")),
   path("basket/", include("basket.urls", namespace="basket")),
-  path("adminapp/", include("adminapp.urls", namespace="adminapp"))
+  path("adminapp/", include("adminapp.urls", namespace="adminapp")),
+  path("", include("social_django.urls", namespace="social"))
 ]
 
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -3,6 +3,7 @@ from adminapp.views import IndexTemlateView, UserListView, UserCreateView, UserU
 
 
 app_name = "adminapp"
+
 urlpatterns = [
     path("", IndexTemlateView.as_view(), name="index"),
     path("users/", UserListView.as_view(), name="admin_users"),
@@ -11,7 +12,7 @@ urlpatterns = [
     path("user_delete/<int:pk>/", UserDeleteViewView.as_view(), name="admin_user_delete"),
 
     path("categories/", admin_categories, name="admin_categories"),
-    path("categories_create/", admin_categories_create, name="admin_categories_create"), 
+    path("categories_create/", admin_categories_create, name="admin_categories_create"),
     path("category_update/<int:id>/", admin_category_update, name="admin_category_update"),
     path("category_delete/<int:id>/", admin_category_delete, name="admin_category_delete"),
 
