@@ -128,7 +128,7 @@ class ProfileFormView(UpdateView, BaseClassContextMixin, UserDispatchMixin):
         return redirect(self.success_url)
 
 
-    def get_context_date(self, **kwargs):
+    def get_context_data(self, **kwargs):
         context = super(ProfileFormView, self).get_context_data()
         context["profile"] = UserProfileEditForm(instance=self.request.user.userprofile)
         return context
