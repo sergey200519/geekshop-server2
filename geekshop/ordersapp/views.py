@@ -9,7 +9,8 @@ from django.urls import reverse_lazy, reverse
 from django.forms import inlineformset_factory
 from basket.models import Basket
 from django.db import transaction
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, JsonResponse
+from mainapp.models import Product
 
 
 class OrderList(ListView, BaseClassContextMixin):
@@ -37,6 +38,7 @@ class OrderCreate(CreateView, BaseClassContextMixin):
                     form.initial['product'] = basket_item[num].product
                     form.initial['quantity'] = basket_item[num].quantity
                     form.initial['price'] = basket_item[num].product.price
+                basket_item.delete()
             else:
                 formset = OrderFormSet()
 
@@ -107,3 +109,11 @@ def order_forming_complete(request, pk):
     order.status = Order.SENT_TO_PROCEED
     order.save()
     return HttpResponseRedirect(reverse("orders:list"))
+
+
+def get_product_price(request, pk):
+    if request.META.get('HTTP_X_REQUESTED_WITH') == 'XMLHttpRequest':
+        product = Product.objects.get(pk=pk)
+        if product:
+            return JsonResponse({"price": product.price})
+        return JsonResponse({"price": 0})
