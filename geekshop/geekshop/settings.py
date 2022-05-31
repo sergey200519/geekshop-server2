@@ -89,7 +89,7 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-SERVER = False
+SERVER = True
 if SERVER:
     DATABASES = {
         'default': {
