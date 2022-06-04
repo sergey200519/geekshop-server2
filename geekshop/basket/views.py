@@ -34,7 +34,7 @@ def basket_edit(request, basket_id, quantity):
         else:
             basket.delete()
 
-        baskets = Basket.objects.filter(user = request.user)
+        baskets = Basket.objects.filter(user=request.user).select_related()
         context = {"baskets": baskets}
 
         result = render_to_string("basket/basket.html", context)

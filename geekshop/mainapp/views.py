@@ -1,36 +1,55 @@
+import os
+import json
+
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.shortcuts import render
+
+# Create your views here.
+from django.views.generic import DetailView
+
 from mainapp.models import Product, ProductCategories
-from django.core.paginator import Paginator
+
+MODULE_DIR = os.path.dirname(__file__)
+
+def read_file(name):
+    file_path = os.path.join(MODULE_DIR, name)
+    return  json.load(open(file_path, encoding='utf-8'))
 
 def index(request):
-  context = {
-    "title_logo": "GeekShop",
-    "title": "GeekShop Store"
-  }
-  return render(request, "mainapp/index.html", context=context)
-
-def products(request, id_category=None, page=1):
-    if id_category:
-        category = ProductCategories.objects.filter(id=id_category)
-        product = Product.objects.filter(category=id_category)
-    else:
-        category = ProductCategories.objects.all()
-        product = Product.objects.all()
-
-    pagination = Paginator(product, per_page=2)
-
-    product_pagination = pagination.page(page)
-    # except PageNotAnInteger:
-    #     product_pagination = pagination.page(1)
-
-
-    context = {
-        "title_logo": "GeekShop",
-        "title": "GeekShop - Каталог",
-        "categories": category,
-        "products": product_pagination
+    content = {
+        'title': 'Geekshop'
     }
-    return render(request, "mainapp/products.html", context=context)
+    return  render(request,'mainapp/index.html',content)
+
+
+def products(request,id_category=None,page=1):
+
+    if id_category:
+        products_ = Product.objects.filter(category_id=id_category).select_related()
+    else:
+        products_ = Product.objects.all().select_related('category')
+
+    pagination = Paginator(products_, per_page=2)
+
+    try:
+        product_pagination = pagination.page(page)
+    except PageNotAnInteger:
+        product_pagination = pagination.page(1)
+    except EmptyPage:
+        product_pagination = pagination.page(pagination.num_pages)
+    content = {
+        'title' : 'Geekshop - Каталог',
+        'categories': ProductCategories.objects.all(),
+        'products': product_pagination
+
+    }
+
+
+    return  render(request,'mainapp/products.html',content)
+
+class ProductDetail(DetailView):
+    model = Product
+    template_name = 'mainapp/detail.html'
 
 
 def all_products(request):
